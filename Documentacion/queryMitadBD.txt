@@ -1,0 +1,114 @@
+-- CREACION DE TABLAS
+CREATE TABLE tbpersona (
+    tbpersonaid INT IDENTITY(1,1) NOT NULL,
+    tbpersonanombre nvarchar(max),
+    tbpersonaapellido nvarchar(max),
+
+);
+
+CREATE TABLE tbcorreopersona (
+    tbcorreopersonaid INT IDENTITY(1,1) NOT NULL,
+    tbcorreopersonanombre nvarchar(max),
+	 tbpersonaid INT
+);
+
+CREATE TABLE tbtelefonopersona (
+    tbtelefonopersonaid INT IDENTITY(1,1) NOT NULL,
+	tbtelefonopersonanumero nvarchar(max),
+	 tbpersonaid INT
+);
+CREATE TABLE tbpaciente (
+    tbpacienteid INT IDENTITY(1,1) NOT NULL,
+	tbpersonaid INT,
+	tbtipousuarioid INT
+);
+CREATE TABLE tbadministrador (
+    tbadministradorid INT IDENTITY(1,1) NOT NULL,
+	tbpersonaid INT,
+	tbtipousuarioid INT
+);
+
+CREATE TABLE tbmedico (
+    tbmedicoid INT IDENTITY(1,1) NOT NULL,
+	tbpersonaid INT,
+	tbtipousuarioid INT
+);
+CREATE TABLE tbtipousuario (
+   tbtipousuarioid INT IDENTITY(1,1) NOT NULL,
+	tbtiposuarioidtipo INT
+);
+
+CREATE TABLE tbhorario (
+   tbhorarioid INT IDENTITY(1,1) NOT NULL,
+	tbhorariohorainicio TIME,
+	tbhorariohorafinal TIME,
+	tbmedicoid INT,
+	tbhorariodiaid INT
+);
+
+CREATE TABLE tbhorariodia (
+   tbhorariodiaid INT IDENTITY(1,1) NOT NULL,
+	tbhorariodianombre NVARCHAR(MAX)
+);
+
+
+
+--CREACION DE LAS PK'S
+
+--ENTIDADES
+ALTER TABLE tbpersona
+ADD CONSTRAINT PKtbpersonaid PRIMARY KEY (tbpersonaid);
+
+ALTER TABLE tbcorreopersona
+ADD CONSTRAINT PKtbcorreopersonaid PRIMARY KEY (tbcorreopersonaid);
+
+ALTER TABLE tbtelefonopersona
+ADD CONSTRAINT PKtbtelefonopersonaid PRIMARY KEY (tbtelefonopersonaid);
+
+ALTER TABLE tbpaciente
+ADD CONSTRAINT PKtbpacienteid PRIMARY KEY (tbpacienteid);
+ALTER TABLE tbadministrador
+ADD CONSTRAINT PKtbadministradorid PRIMARY KEY (tbadministradorid);
+ALTER TABLE tbmedico
+ADD CONSTRAINT PKtbmedicoid PRIMARY KEY (tbmedicoid);
+ALTER TABLE tbtipousuario
+ADD CONSTRAINT PKtbtipousuarioid PRIMARY KEY (tbtipousuarioid);
+ALTER TABLE tbhorario
+ADD CONSTRAINT PKtbhorarioid PRIMARY KEY (tbhorarioid);
+ALTER TABLE tbhorariodia
+ADD CONSTRAINT PKtbhorariodiaid PRIMARY KEY (tbhorariodiaid);
+
+
+
+
+--CREACION DE LAS FK'S
+
+ALTER TABLE tbtelefonopersona
+ADD FOREIGN KEY (tbpersonaid) REFERENCES tbpersona(tbpersonaid);
+
+ALTER TABLE tbcorreopersona
+ADD FOREIGN KEY (tbpersonaid) REFERENCES tbpersona(tbpersonaid);
+
+ALTER TABLE tbpaciente
+ADD FOREIGN KEY (tbtipousuarioid) REFERENCES tbtipousuario(tbtipousuarioid);
+
+ALTER TABLE tbadministrador
+ADD FOREIGN KEY (tbtipousuarioid) REFERENCES tbtipousuario(tbtipousuarioid);
+
+ALTER TABLE tbmedico
+ADD FOREIGN KEY (tbtipousuarioid) REFERENCES tbtipousuario(tbtipousuarioid);
+
+ALTER TABLE tbhorario
+ADD FOREIGN KEY (tbhorariodiaid) REFERENCES tbhorariodia(tbhorariodiaid);
+
+ALTER TABLE tbhorario
+ADD FOREIGN KEY (tbmedicoid) REFERENCES tbmedico(tbmedicoid);
+
+ALTER TABLE tbmedico
+ADD FOREIGN KEY (tbpersonaid) REFERENCES tbpersona(tbpersonaid);
+
+ALTER TABLE tbadministrador
+ADD FOREIGN KEY (tbpersonaid) REFERENCES tbpersona(tbpersonaid);
+
+ALTER TABLE tbpaciente
+ADD FOREIGN KEY (tbpersonaid) REFERENCES tbpersona(tbpersonaid);
