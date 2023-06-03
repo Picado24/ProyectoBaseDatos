@@ -1,0 +1,239 @@
+CREATE DATABASE BDCLINICAPRIVADA
+
+USE BDCLINICAPRIVADA
+
+-- CREACION DE TABLAS
+CREATE TABLE tbpersona (
+    tbpersonaid INT IDENTITY(1,1) NOT NULL,
+    tbpersonanombre nvarchar(max),
+    tbpersonaapellido nvarchar(max),
+
+);
+
+CREATE TABLE tbcorreopersona (
+    tbcorreopersonaid INT IDENTITY(1,1) NOT NULL,
+    tbcorreopersonanombre nvarchar(max),
+	 tbpersonaid INT
+);
+
+CREATE TABLE tbtelefonopersona (
+    tbtelefonopersonaid INT IDENTITY(1,1) NOT NULL,
+	tbtelefonopersonanumero nvarchar(max),
+	 tbpersonaid INT
+);
+CREATE TABLE tbpaciente (
+    tbpacienteid INT IDENTITY(1,1) NOT NULL,
+	tbpersonaid INT,
+	tbtipousuarioid INT
+);
+CREATE TABLE tbadministrador (
+    tbadministradorid INT IDENTITY(1,1) NOT NULL,
+	tbpersonaid INT,
+	tbtipousuarioid INT
+);
+
+CREATE TABLE tbmedico (
+    tbmedicoid INT IDENTITY(1,1) NOT NULL,
+	tbpersonaid INT,
+	tbtipousuarioid INT
+);
+CREATE TABLE tbtipousuario (
+   tbtipousuarioid INT IDENTITY(1,1) NOT NULL,
+	tbtiposuarioidtipo INT
+);
+
+CREATE TABLE tbhorario (
+   tbhorarioid INT IDENTITY(1,1) NOT NULL,
+	tbhorariohorainicio TIME,
+	tbhorariohorafinal TIME,
+	tbmedicoid INT,
+	tbhorariodiaid INT
+);
+
+CREATE TABLE tbhorariodia (
+   tbhorariodiaid INT IDENTITY(1,1) NOT NULL,
+	tbhorariodianombre NVARCHAR(MAX)
+);
+
+--Jurguen
+CREATE TABLE tbmedicoespecialidad (
+	tbmedicoespecialidadid INT IDENTITY(1,1) NOT NULL,
+	tbmedicoid INT,
+	tbespecialidadid INT
+);
+
+CREATE TABLE tbespecialidad (
+	tbespecialidadid INT IDENTITY(1,1) NOT NULL,
+	tbespecialidadnombre NVARCHAR(MAX),
+	tbespecialidaddescripcion NVARCHAR(MAX)
+);
+
+CREATE TABLE tbacceso (
+	tbaccesoid INT IDENTITY(1,1) NOT NULL,
+	tbaccesopassword NVARCHAR(MAX),
+	tbaccesoestado TINYINT,
+	tbaccesopacienteid INT,
+	tbaccesomedicoid INT,
+	tbaccesoadministradorid INT
+);
+
+CREATE TABLE tbaccesopaciente (
+	tbaccesopacienteid INT IDENTITY(1,1) NOT NULL,
+	tbpacienteid INT
+);
+
+CREATE TABLE tbaccesoadministrador(
+	tbaccesoadministradorid INT IDENTITY(1,1) NOT NULL,
+	tbadministradorid INT
+);
+
+CREATE TABLE tbaccesomedico(
+	tbaccesomedicoid INT IDENTITY(1,1) NOT NULL,
+	tbmedicoid INT
+);
+
+CREATE TABLE tbcita(
+	tbcitaid INT IDENTITY(1,1) NOT NULL,
+	tbcitafecha DATE,
+	tbcitahora TIME,
+	tbcitasala NVARCHAR(MAX),
+	tbfacturaid INT,
+	tbpacienteid INT,
+	tbmedicoid INT
+);
+
+CREATE TABLE tbfactura(
+	tbfacturaid INT IDENTITY(1,1) NOT NULL,
+	tbfacturamontototal DECIMAL(10,2),
+	tbfacturafecha DATE,
+	tbcitaid INT
+);
+
+
+
+
+
+
+
+
+--CREACION DE LAS PK'S
+
+--ENTIDADES
+ALTER TABLE tbpersona
+ADD CONSTRAINT PKtbpersonaid PRIMARY KEY (tbpersonaid);
+
+ALTER TABLE tbcorreopersona
+ADD CONSTRAINT PKtbcorreopersonaid PRIMARY KEY (tbcorreopersonaid);
+
+ALTER TABLE tbtelefonopersona
+ADD CONSTRAINT PKtbtelefonopersonaid PRIMARY KEY (tbtelefonopersonaid);
+
+ALTER TABLE tbpaciente
+ADD CONSTRAINT PKtbpacienteid PRIMARY KEY (tbpacienteid);
+
+ALTER TABLE tbadministrador
+ADD CONSTRAINT PKtbadministradorid PRIMARY KEY (tbadministradorid);
+
+ALTER TABLE tbmedico
+ADD CONSTRAINT PKtbmedicoid PRIMARY KEY (tbmedicoid);
+
+ALTER TABLE tbtipousuario
+ADD CONSTRAINT PKtbtipousuarioid PRIMARY KEY (tbtipousuarioid);
+
+ALTER TABLE tbhorario
+ADD CONSTRAINT PKtbhorarioid PRIMARY KEY (tbhorarioid);
+
+ALTER TABLE tbhorariodia
+ADD CONSTRAINT PKtbhorariodiaid PRIMARY KEY (tbhorariodiaid);
+
+ALTER TABLE tbmedicoespecialidad
+ADD CONSTRAINT PKtbmedicoespecialidadid PRIMARY KEY (tbmedicoespecialidadid);
+
+ALTER TABLE tbespecialidad
+ADD CONSTRAINT PKtbespecialidadid PRIMARY KEY (tbespecialidadid);
+
+ALTER TABLE tbacceso
+ADD CONSTRAINT PKtbacceso PRIMARY KEY (tbaccesoid);
+
+ALTER TABLE tbaccesopaciente
+ADD CONSTRAINT PKtbaccesopacienteid PRIMARY KEY (tbaccesopacienteid);
+
+ALTER TABLE tbaccesoadministrador
+ADD CONSTRAINT PKtbaccesoadministradorid PRIMARY KEY (tbaccesoadministradorid);
+
+ALTER TABLE tbaccesomedico
+ADD CONSTRAINT PKtbaccesomedicoid PRIMARY KEY (tbaccesomedicoid);
+
+ALTER TABLE tbcita
+ADD CONSTRAINT PKtbcitaid PRIMARY KEY (tbcitaid);
+
+ALTER TABLE tbfactura
+ADD CONSTRAINT PKtbfacturaid PRIMARY KEY (tbfacturaid);
+
+--CREACION DE LAS FK'S
+
+ALTER TABLE tbtelefonopersona
+ADD FOREIGN KEY (tbpersonaid) REFERENCES tbpersona(tbpersonaid);
+
+ALTER TABLE tbcorreopersona
+ADD FOREIGN KEY (tbpersonaid) REFERENCES tbpersona(tbpersonaid);
+
+ALTER TABLE tbpaciente
+ADD FOREIGN KEY (tbtipousuarioid) REFERENCES tbtipousuario(tbtipousuarioid);
+
+ALTER TABLE tbadministrador
+ADD FOREIGN KEY (tbtipousuarioid) REFERENCES tbtipousuario(tbtipousuarioid);
+
+ALTER TABLE tbmedico
+ADD FOREIGN KEY (tbtipousuarioid) REFERENCES tbtipousuario(tbtipousuarioid);
+
+ALTER TABLE tbhorario
+ADD FOREIGN KEY (tbhorariodiaid) REFERENCES tbhorariodia(tbhorariodiaid);
+
+ALTER TABLE tbhorario
+ADD FOREIGN KEY (tbmedicoid) REFERENCES tbmedico(tbmedicoid);
+
+ALTER TABLE tbmedico
+ADD FOREIGN KEY (tbpersonaid) REFERENCES tbpersona(tbpersonaid);
+
+ALTER TABLE tbadministrador
+ADD FOREIGN KEY (tbpersonaid) REFERENCES tbpersona(tbpersonaid);
+
+ALTER TABLE tbpaciente
+ADD FOREIGN KEY (tbpersonaid) REFERENCES tbpersona(tbpersonaid);
+
+ALTER TABLE tbmedicoespecialidad
+ADD FOREIGN KEY (tbmedicoid) REFERENCES tbmedico(tbmedicoid);
+
+ALTER TABLE tbmedicoespecialidad
+ADD FOREIGN KEY (tbespecialidadid) REFERENCES tbespecialidad(tbespecialidadid);
+
+ALTER TABLE tbacceso
+ADD FOREIGN KEY (tbaccesopacienteid) REFERENCES tbaccesopaciente(tbaccesopacienteid);
+
+ALTER TABLE tbacceso
+ADD FOREIGN KEY (tbaccesomedicoid) REFERENCES tbaccesomedico(tbaccesomedicoid);
+
+ALTER TABLE tbacceso
+ADD FOREIGN KEY (tbaccesoadministradorid) REFERENCES tbaccesoadministrador(tbaccesoadministradorid);
+
+ALTER TABLE tbaccesopaciente
+ADD FOREIGN KEY (tbpacienteid) REFERENCES tbpaciente(tbpacienteid);
+
+ALTER TABLE tbaccesoadministrador
+ADD FOREIGN KEY (tbaccesoadministradorid) REFERENCES tbadministrador(tbadministradorid);
+
+ALTER TABLE tbaccesomedico
+ADD FOREIGN KEY (tbmedicoid) REFERENCES tbmedico(tbmedicoid);
+
+ALTER TABLE tbcita
+ADD FOREIGN KEY (tbfacturaid) REFERENCES tbfactura(tbfacturaid);
+
+ALTER TABLE tbcita
+ADD FOREIGN KEY (tbpacienteid) REFERENCES tbpaciente(tbpacienteid);
+
+ALTER TABLE tbcita
+ADD FOREIGN KEY (tbmedicoid) REFERENCES tbmedico(tbmedicoid);
+
+ALTER TABLE tbfactura
+ADD FOREIGN KEY (tbcitaid) REFERENCES tbcita(tbcitaid);
